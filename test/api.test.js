@@ -1,101 +1,94 @@
-import app from '../server/'
-import supertest from 'supertest'
+import app                from '../server/'
+import supertest          from 'supertest'
 import { expect, should } from 'chai'
+
+/**
+ * A complete set of CRUD operation tests for stores.
+ */
 
 const temp = {}
 const request = supertest.agent(app.listen())
 should()
 
-describe('POST /city', () => {
-  it('should add a city', (done) => {
-    request
-      .post('/api/city')
-      .set('Accept', 'application/json')
-      .send({
-        name: 'Bangkok',
-        totalPopulation: 8249117,
-        country: 'Thailand',
-        zipCode: 1200,
-      })
-      .expect(200, (err, res) => {
-        temp.idCity = res.body._id;
-        done()
-      })
-  })
+describe('POST /store', () => {
+    it('should add a store', (done) => {
+        request.post('/api/store').set('Accept', 'application/json').send({
+            name        : "Thanos-Pizza Berlin",
+            street      : "Unter den Linden 6",
+            postalCode  : "10099",
+            city        : "Berlin",
+            phoneNumber : "0151/1234567"
+        })
+        .expect(200, (err, res) => {
+            // save the new store id for subsequent tests
+            temp.idStore = res.body._id
+            done()
+        })
+    })
 })
 
-describe('GET /city', () => {
-  it('should get all cities', (done) => {
-    request
-      .get('/api/city')
-      .expect(200, (err, res) => {
-        expect(res.body.length).to.be.at.least(1);
-        done()
-      })
-  })
+describe('GET /store', () => {
+    it('should get all stores', (done) => {
+        request.get('/api/store').expect(200, (err, res) => {
+            // expects at least one result because we've just created a store using HTTP POST
+            expect(res.body.length).to.be.at.least(1)
+            done()
+        })
+    })
 })
 
-describe('GET /city/:id', () => {
-  it('should get a city', (done) => {
-    request
-      .get(`/api/city/${temp.idCity}`)
-      .expect(200, (err, res) => {
-        res.body.name.should.equal('Bangkok')
-        res.body.totalPopulation.should.equal(8249117)
-        res.body.country.should.equal('Thailand')
-        res.body.zipCode.should.equal(1200)
-        res.body._id.should.equal(temp.idCity)
-        done()
-      })
-  })
+describe('GET /store/:id', () => {
+    it('should get a store', (done) => {
+        request.get(`/api/store/${temp.idStore}`).expect(200, (err, res) => {
+            res.body.name.should.equal("Thanos-Pizza Berlin")
+            res.body.street.should.equal("Unter den Linden 6")
+            res.body.postalCode.should.equal("10099")
+            res.body.city.should.equal("Berlin")
+            res.body.phoneNumber.should.equal("0151/1234567")
+            res.body._id.should.equal(temp.idStore)
+            done()
+        })
+    })
 })
 
-describe('PUT /city', () => {
-  it('should update a city', (done) => {
-    request
-      .put(`/api/city/${temp.idCity}`)
-      .set('Accept', 'application/json')
-      .send({
-        name: 'Chiang Mai',
-        totalPopulation: 148477,
-        country: 'Thailand',
-        zipCode: 50000,
-      })
-      .expect(200, (err, res) => {
-        temp.idCity = res.body._id;
-        done()
-      })
-  })
+describe('PUT /store/:id', () => {
+    it('should update a store', (done) => {
+        request.put(`/api/store/${temp.idStore}`).set('Accept', 'application/json').send({
+            name       : "Thanos-Pizza Adlershof",
+            street     : "Rudower Chaussee 26",
+            postalCode : "12489",
+            phoneNumber: "0209 370081"
+        })
+        .expect(200, (err, res) => {
+            temp.idStore = res.body._id;
+            done()
+        })
+    })
 
-  it('should get updated city', (done) => {
-    request
-      .get(`/api/city/${temp.idCity}`)
-      .expect(200, (err, res) => {
-        res.body.name.should.equal('Chiang Mai')
-        res.body.totalPopulation.should.equal(148477)
-        res.body.country.should.equal('Thailand')
-        res.body.zipCode.should.equal(50000)
-        res.body._id.should.equal(temp.idCity)
-        done()
-      })
-  })
+    it('should get updated store', (done) => {
+        request.get(`/api/store/${temp.idStore}`).expect(200, (err, res) => {
+            res.body.name.should.equal("Thanos-Pizza Adlershof")
+            res.body.street.should.equal("Rudower Chaussee 26")
+            res.body.postalCode.should.equal("12489")
+            res.body.city.should.equal("Berlin") // should remain untouched
+            res.body.phoneNumber.should.equal("0209 370081")
+            res.body._id.should.equal(temp.idStore)
+            done()
+        })
+    })
 })
 
-describe('DELETE /city', () => {
-  it('should delete a city', (done) => {
-    request
-      .delete(`/api/city/${temp.idCity}`)
-      .set('Accept', 'application/json')
-      .expect(200, (err, res) => {
-        done()
-      })
-  })
+describe('DELETE /store', () => {
+    it('should delete a store', (done) => {
+        request.delete(`/api/store/${temp.idStore}`).set('Accept', 'application/json').expect(200, (err, res) => {
+            done()
+        })
+    })
 
-  it('should get error', (done) => {
-    request
-      .get(`/api/city/${temp.idCity}`)
-      .expect(404, () => {
-        done()
-      })
-  })
+    it('should get error', (done) => {
+        // store is no longer available because we removed it 1ns ago ;-)
+        request.get(`/api/city/${temp.idStore}`).expect(404, () => {
+            done()
+        })
+    })
 })
