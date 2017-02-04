@@ -1,6 +1,6 @@
 {
-  "name": "koa-restful-boilerplate",
-  "description": "Koa 2 RESTful API boilerplate",
+  "name": "thanos-pizza-api",
+  "description": "API for the Thanos Pizza Application (based on 'Koa 2 RESTful API boilerplate')",
   "version": "1.0.0",
   "author": "Team Thanos",
   "keywords": [
@@ -14,13 +14,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jsnomad/koa-restful-boilerplate.git"
+    "url": "git+https://github.com/team-thanos/pizza-api.git"
   },
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jsnomad/koa-restful-boilerplate/issues"
-  },
-  "homepage": "https://github.com/jsnomad/koa-restful-boilerplate#readme",
+  "homepage": "https://github.com/team-thanos/pizza-api.git",
   "main": "server/index.js",
   "scripts": {
     "start": "nodemon server/ --exec babel-node",
