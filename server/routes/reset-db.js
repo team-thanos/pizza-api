@@ -15,11 +15,13 @@ import Product      from '../models/product'
 import Store        from '../models/store'
 import Topping      from '../models/topping'
 
-import { baseApi } from '../config'
-
 import each from 'async-each'
 
-// ---
+import { baseApi } from '../config'
+
+/*-------------------------*
+ * initialization options  *
+ *-------------------------*/
 const OPT_PRICE_TOPPING = [0.25, 0.50, 0.75, 1.00]
 const OPT_PRICE_S  = [5.49 , 5.99 , 6.49 , 6.99 ]
 const OPT_PRICE_L  = [7.49 , 7.99 , 8.49 , 8.99 ]
@@ -34,13 +36,16 @@ const OPT_ORDER_STATUS = ["neu", "backend", "fertig"]
 
 // create new router
 const resetDbRouter = new Router();
+// mount rounter on path /api/reset-db
 resetDbRouter.prefix(`/${baseApi}/reset-db`);
 
+// handle GET-requests sent to /api/reset-db
 resetDbRouter.get('/', async (ctx) => {
 
     // drops the database and reinitializes itself again post-drop
     mongoose.connection.db.dropDatabase(() => {
 
+        // temporary lists to hold yet unpersisted entities
         var customers   = []
         var toppings    = []
         var products    = []
@@ -62,7 +67,7 @@ resetDbRouter.get('/', async (ctx) => {
 
             // set random order status
             order.status = lodash.sample(OPT_ORDER_STATUS);
-            
+
             // make a random store responsible for processing the order
             order.store = lodash.sample(stores);
 
@@ -148,13 +153,14 @@ resetDbRouter.get('/', async (ctx) => {
             }
         }
 
+        // persist all data
         each(toppings   , async (topping)   => await topping.save())
         each(products   , async (product)   => await product.save())
         each(stores     , async (store)     => await store.save())
         each(orders     , async (order)     => await order.save())
     });
 
-    ctx.body = {"msg": "init OK"}
+    ctx.body = {"msg": "reset complete"}
 });
 
 export default resetDbRouter;
