@@ -9,6 +9,10 @@ const router = new Router()
 
 router.prefix(`/${baseApi}/list-orders`)
 
+/**
+ * List all orders stored in the system.
+ * This method is not very efficient as it returns all orders and the client has to filter them by store if neccessary.
+ */
 router.get('/', async(ctx) => {
 
     const orders = await Order.find()
