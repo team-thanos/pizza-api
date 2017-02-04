@@ -1,7 +1,7 @@
 import RouterFactory from '../lib/RouterFactory';
 
-import initRouter from './init';
 import listOrdersRouter from './list-orders'
+import resetDbRouter    from './reset-db';
 
 import Order    from '../models/order'
 import Product  from '../models/product'
@@ -9,7 +9,7 @@ import Store    from '../models/store'
 import Topping  from '../models/topping'
 
 const routes = [
-    initRouter,
+    resetDbRouter,
     listOrdersRouter,
     RouterFactory.prototype.create('order'  , Order  ),
     RouterFactory.prototype.create('product', Product),
