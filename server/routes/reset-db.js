@@ -36,7 +36,7 @@ const OPT_ORDER_STATUS = ["neu", "backend", "fertig"]
 
 // create new router
 const resetDbRouter = new Router();
-// mount rounter on path /api/reset-db
+// mount router on path /api/reset-db
 resetDbRouter.prefix(`/${baseApi}/reset-db`);
 
 // handle GET-requests sent to /api/reset-db
