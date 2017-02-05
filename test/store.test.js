@@ -4,6 +4,9 @@ import { expect, should } from 'chai'
 
 /**
  * A complete set of CRUD operation tests for stores.
+ *
+ * Because we only test the mongoose layer here, testing this gives us good indication that everything is working as expected.
+ * All the other routes work exactly the same because they were created using the router factory as well.
  */
 
 const temp = {}
